@@ -1,0 +1,22 @@
+{
+  "name": "it122",
+  "version": "1.0.0",
+  "description": "it122 demo app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ktsthehien/it122.git"
+  },
+  "author": "hien nguyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ktsthehien/it122/issues"
+  },
+  "homepage": "https://github.com/ktsthehien/it122#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

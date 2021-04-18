@@ -1,10 +1,14 @@
+import http from 'http';
+import { parse } from "querystring";
+import * as data from './data.js';
+
 const http = require("http");
 http.createServer((req,res) => {
     var path = req.url.toLowerCase();
     switch(path) {
         case '/':
             res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('Home page');
+            res.end(JSON.stringify(movies));
             break;
         case '/about':
             res.writeHead(200, {'Content-Type': 'text/plain'});

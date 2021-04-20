@@ -7,28 +7,18 @@ let movies = [
     ];
 
 
-const getAll = () =>{
+const getAll = () => {
     return movies;
-}
+};
 
 console.log(getAll())
 
-// for (i=0; i<movies.length; i++) {
-//     console.log(movies[i])
-// }
-
-// movies.forEach((movie) =>{
-//     console.log(movie)
-// });
-
-const findMovie = (name) =>{
+const getItem = (name) => {
     return movies.find((movie) => {
-        return movie.name ===name;
-});
-}
-console.log(findMovie("Titanic"))
+        return film.name.toLowerCase() === name.toLowerCase();
+    })
+};
 
-
-export { getAll, findMovie}
+export { getAll, getItem}
 
 

@@ -1,22 +1,28 @@
 import http from 'http';
-import { parse } from "querystring";
-import * as data from './data.js';
+import qs from 'querystring';
+import { getAll, getItem } from './data.js';
 
-const http = require("http");
-http.createServer((req,res) => {
-    var path = req.url.toLowerCase();
-    switch(path) {
-        case '/':
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end(JSON.stringify(movies));
+http.createServer((req, res) => {
+
+    let url = req.url.split("?"); // get route from query string
+    let query = qs.parse(url[1]); // convert query string to object
+    let path = url[0].toLowerCase();
+
+    switch (path) {
+        case "/":
+            res.writeHead(200, {"Content-type": "text/plain"});
+            res.end(JSON.stringify(getAll()));
             break;
-        case '/about':
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('About page');
+        case "/about":
+            res.writeHead(200, {"Content-type": "text/plain"});
+            res.end("I am Hien Nguyen from Vietnam");
             break;
+        case "/detail":
+            res.writeHead(200, {"Content-type": "text/plain"});
+            res.end(JSON.stringify(getItem(query.title)));
         default:
-            res.writeHead(404, {'Content-Type': 'text/plain'});
-            res.end('Not found');
+            res.writeHead(404, {"Content-type": "text/plain"});
+            res.end("Not found");
             break;
     }
 }).listen(process.env.PORT || 3000);

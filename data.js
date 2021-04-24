@@ -15,7 +15,7 @@ console.log(getAll())
 
 const getItem = (name) => {
     return movies.find((movie) => {
-        return film.name.toLowerCase() === name.toLowerCase();
+        return movie.name.toLowerCase() === name.toLowerCase();
     })
 };
 

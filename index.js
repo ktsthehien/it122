@@ -19,7 +19,7 @@ http.createServer((req, res) => {
             break;
         case "/detail":
             res.writeHead(200, {"Content-type": "text/plain"});
-            res.end(JSON.stringify(getItem(query.title)));
+            res.end(JSON.stringify(getItem(query.name)));
         default:
             res.writeHead(404, {"Content-type": "text/plain"});
             res.end("Not found");

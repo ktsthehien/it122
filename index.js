@@ -1,28 +1,56 @@
-import http from 'http';
-import qs from 'querystring';
-import { getAll, getItem } from './data.js';
+"use strict"
 
-http.createServer((req, res) => {
+import * as movie from "./movie.js";
+import express from 'express';
+import handlebars from "express-handlebars"
 
-    let url = req.url.split("?"); // get route from query string
-    let query = qs.parse(url[1]); // convert query string to object
-    let path = url[0].toLowerCase();
+const app = express();
 
-    switch (path) {
-        case "/":
-            res.writeHead(200, {"Content-type": "text/plain"});
-            res.end(JSON.stringify(getAll()));
-            break;
-        case "/about":
-            res.writeHead(200, {"Content-type": "text/plain"});
-            res.end("I am Hien Nguyen from Vietnam");
-            break;
-        case "/detail":
-            res.writeHead(200, {"Content-type": "text/plain"});
-            res.end(JSON.stringify(getItem(query.name)));
-        default:
-            res.writeHead(404, {"Content-type": "text/plain"});
-            res.end("Not found");
-            break;
-    }
-}).listen(process.env.PORT || 3000);
+app.set("port", process.env.PORT || 3000);
+app.use(express.static('./public')); // allows direct navigation to static files
+app.use(express.urlencoded()); //Parse URL-encoded bodies
+app.use(express.json()); //Used to parse JSON bodies
+
+app.engine('hbs', handlebars({defaultLayout: "main.hbs"}));
+app.set("view engine", "hbs");
+
+app.get('/', (req,res) => {
+    res.render('home', {movies: movie.getAll()});
+});
+
+// send plain text response
+app.get('/about', (req,res) => {
+    res.type('text/plain');
+    res.send('About Me: I am Hien Nguyen from Vietnam');
+});
+
+// handle GET 
+
+
+app.get('/detail', (req,res) => {
+    console.log(req.query)
+    let result = movie.getItem(req.query.name);
+    res.render("details", {
+        name: req.query.name, 
+        result
+        }
+    );
+});
+
+// handle POST
+app.post('/detail', (req,res) => {
+    console.log(req.body)
+    let found = movie.getItem(req.body.name);
+    res.render("details", {name: req.body.name, result: found, movies: movie.getAll()});
+});
+
+// define 404 handler
+app.use((req,res) => {
+    res.type('text/plain'); 
+    res.status(404);
+    res.send('404 - Not found');
+});
+
+app.listen(app.get('port'), () => {
+    console.log('Express started');    
+});

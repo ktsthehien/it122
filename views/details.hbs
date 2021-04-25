@@ -1,0 +1,17 @@
+<html>
+    <body>
+        <a href="/">Home</a>
+{{#if result}}
+    <h2>{{name}} details</h2>
+    <li>Year: {{result.year}}</li>
+    <li>Rate: {{result.rate}}</li>
+    <li>Type: {{result.type}}</li>
+    <p>
+    <a href="/delete?name={{result.name}}">Delete</a>
+    </p>
+{{else}}
+        <h2>{{title}} not found</h2>
+{{/if}}
+
+    </body>
+</html>

@@ -1,0 +1,12 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+    background-color: rgb(253, 220, 71);
+    width: 80%;
+    margin: 30px auto;
+}
+
+footer{
+    margin: 50px auto;
+    font-size: small;
+}

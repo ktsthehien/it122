@@ -21,6 +21,23 @@ const getItem = (name) => {
     })
 };
 
-export { getAll, getItem}
+const deleteItem = (name) => {
+    const oldLength = movies.length;
+    movies = movies.filter((item) => {
+        return item.name !== name;
+    });
+    return {deleted: oldLength !== movies.length, total: movies.length };
+};
+
+const addItem = (newMovie) => {
+    const oldLength = movies.length;
+    let found = getItem(newMovie.name);
+    if (!found) {
+        movies.push(newMovie);
+    }
+    return {added: oldLength !== movies.length, total: movies.length };
+};
+
+export { getAll, getItem, addItem, deleteItem }
 
 

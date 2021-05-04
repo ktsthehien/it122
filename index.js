@@ -26,6 +26,11 @@ app.get('/about', (req,res) => {
 
 // handle GET 
 
+app.get('/delete', (req,res) => {
+    let result = movie.deleteItem(req.query.name); // delete movie object
+    res.render('delete', {name: req.query.name, result: result});
+});
+
 
 app.get('/detail', (req,res) => {
     console.log(req.query)

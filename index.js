@@ -18,12 +18,13 @@ app.use('/api', cors()); // set Access-Control-Allow-Origin header for api route
 app.engine('hbs', handlebars({defaultLayout: "main.hbs"}));
 app.set("view engine", "hbs");
 
-app.get('/', (req,res) => {
+app.get('/', (req,res, next) => {
     Movie.find({}).lean()
-        .then((movies) => {
-            res.render('home', { movies });
-        })
-        .catch(err => next(err));
+    .then((movies) => {
+//        res.render('home', { movies });
+
+        res.render('home', {movies: JSON.stringify(movies)});
+    });
 });
 
 // send plain text response

@@ -28,13 +28,24 @@
         return <div>
             <hr />
             <h3>Movie Details</h3>
-            {props.item && <ul>
+            <form>
+                name:<input type="text" name="name" value={props.item.name || ""} onChange={props.handleChange} /><br/>
+                year:<input type="text" name="year" value={props.item.year || ""} onChange={props.handleChange}/><br/>
+                rate:<input type="text" name="rate" value={props.item.rate || ""} onChange={props.handleChange}/><br/>
+                type:<input type="text" name="type" value={props.item.type || ""} onChange={props.handleChange}/><br/>
+            </form>
+            <button name="clear" onClick={props.clearForm}> Clear </button>&nbsp;
+            <button name="save" onClick={props.saveItem}> Save </button>&nbsp;
+            <button name="delete" onClick={props.deleteItem}> Delete </button>&nbsp;
+            
+            {{!-- {props.item && <ul>
                 <li>name: {props.item.name}</li>
                 <li>year: {props.item.year}</li>
                 <li>rate: {props.item.rate}</li>
                 <li>type: {props.item.type}</li>
             </ul>
-            }
+            } --}}
+            
         </div>
     }
 
@@ -46,11 +57,14 @@
             currentItem: {}
         };
         this.selectItem = this.selectItem.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.clearForm = this.clearForm.bind(this);
+        this.saveItem = this.saveItem.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
     }
 
         selectItem = (event) => {
             // <a href={"/detail?name="+item.name}>
-            console.log(event.target.innerText)
             const found = this.state.items.find((item) => {
                 return item.name === event.target.innerText;
             });
@@ -58,11 +72,75 @@
             //window.location.href = "/detail?name=" + event.target.innerText;
         }
 
+        handleChange = (event) => {
+            let newItem = this.state.currentItem;
+            newItem[event.target.name] = event.target.value;
+            this.setState({currentItem: newItem})
+        }
+
+        clearForm = () => {
+            this.setState({currentItem: {}})
+        }
+
+        saveItem = () => {
+            //save edits to backend DB
+            if (this.state.currentItem == {}) return
+
+            let newItem = this.state.currentItem;
+
+            fetch("/api/movies/add/", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newItem)
+            })
+                .then(res => res.json())
+                .then((json) => { 
+                    console.log(json) 
+                     //if this new item, add to list of items
+                    if (json.updated === 0) {
+                        newItem._id = json._id
+                        let newList = this.state.items;
+                        newList.push(newItem);
+                        this.setState({items: newList});
+                    }
+                   
+                    });
+        }
+
+        deleteItem = () => {
+            console.log(this.state.currentItem)
+            if (this.state.currentItem == {}) return
+
+            let deleteId = this.state.currentItem._id
+
+            let url = "/api/movies/delete/" + deleteId;
+            fetch(url)
+            .then(res => res.json())
+            .then((json) => { 
+                // if delete succeeded update master list
+                console.log(json)
+                if (json.deleted.deletedCount > 0) {
+                    let newList = this.state.items.filter(item => {
+                        return item._id != deleteId;
+                    })
+                    this.setState({items: newList, currentItem:{}})
+                }
+                
+            })
+        }
+
     render() {
         return ( 
         <div> <h2>Inventory</h2>  
             <Movies data={this.state.items} clickHandler={this.selectItem} />
-            <ItemDetail item={this.state.currentItem} />  
+            <ItemDetail 
+                item={this.state.currentItem} 
+                handleChange={this.handleChange}
+                clearForm={this.clearForm}
+                saveItem={this.saveItem} 
+                deleteItem={this.deleteItem}
+
+                />  
         </div> );
         }
     }
